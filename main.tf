@@ -1,18 +1,19 @@
-resource "google_compute_network" "vpc" {
-  name                    = "${var.env}-vpc"
-  auto_create_subnetworks = false
+variable "env" {
+  default = "prod"
 }
 
-resource "google_compute_subnetwork" "public_subnet" {
-  name          = "${var.env}-public-subnet"
-  ip_cidr_range = var.public_subnet_cidr
-  region        = var.region
-  network       = google_compute_network.vpc.id
+variable "region" {
+  default = "us-east1"
 }
 
-resource "google_compute_subnetwork" "private_subnet" {
-  name          = "${var.env}-private-subnet"
-  ip_cidr_range = var.private_subnet_cidr
-  region        = var.region
-  network       = google_compute_network.vpc.id
+variable "public_subnet_cidr" {
+  default = "10.2.1.0/24"
+}
+
+variable "private_subnet_cidr" {
+  default = "10.2.2.0/24"
+}
+
+variable "project_id" {
+  default = "<PROD_PROJECT_ID>"
 }
