@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      containers:
+        - name: order-service
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 8080
+
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "{{ .Values.env.SPRING_PROFILES_ACTIVE }}"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dbpass
+                  key: dbPassword
+
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.health.livenessPath }}
+              port: 8080
+            initialDelaySeconds: 20
+
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.health.readinessPath }}
+              port: 8080
+            initialDelaySeconds: 10
