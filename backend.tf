@@ -1,6 +1,6 @@
 terraform {
-  backend "gcs" {           # Use "azurerm" for Azure
+  backend "gcs" {           
     bucket = "my-terraform-state-bucket"
-    prefix = "prod"
+    prefix = "staging"
   }
 }
