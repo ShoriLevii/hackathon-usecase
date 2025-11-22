@@ -1,19 +1,24 @@
+provider "google" {
+  project = var.project_id
+  region  = var.region
+}
+
 variable "env" {
-  default = "staging"
-}
-
-variable "region" {
-  default = "us-central1"
-}
-
-variable "public_subnet_cidr" {
-  default = "10.1.1.0/24"
-}
-
-variable "private_subnet_cidr" {
-  default = "10.1.2.0/24"
+  default = "dev"
 }
 
 variable "project_id" {
-  default = "<STAGING_PROJECT_ID>"
+  default = "<GCP_PROJECT_ID>"
+}
+
+module "network" {
+  source             = "../modules/network"
+  env                = var.env
+  region             = var.region
+  public_subnet_cidr = "10.0.1.0/24"
+  private_subnet_cidr = "10.0.2.0/24"
+}
+
+output "vpc_id" {
+  value = module.network.vpc_id
 }

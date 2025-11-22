@@ -1,6 +1,6 @@
 terraform {
-  backend "gcs" {           
+  backend "gcs" {
     bucket = "my-terraform-state-bucket"
-    prefix = "staging"
+    prefix = "dev"
   }
 }
