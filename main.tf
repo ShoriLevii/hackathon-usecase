@@ -1,24 +1,18 @@
-provider "google" {
-  project = var.project_id
-  region  = var.region
+resource "google_compute_network" "vpc" {
+  name                    = "${var.env}-vpc"
+  auto_create_subnetworks = false
 }
 
-variable "env" {
-  default = "dev"
+resource "google_compute_subnetwork" "public_subnet" {
+  name          = "${var.env}-public-subnet"
+  ip_cidr_range = var.public_subnet_cidr
+  region        = var.region
+  network       = google_compute_network.vpc.id
 }
 
-variable "project_id" {
-  default = "<GCP_PROJECT_ID>"
-}
-
-module "network" {
-  source             = "../modules/network"
-  env                = var.env
-  region             = var.region
-  public_subnet_cidr = "10.0.1.0/24"
-  private_subnet_cidr = "10.0.2.0/24"
-}
-
-output "vpc_id" {
-  value = module.network.vpc_id
+resource "google_compute_subnetwork" "private_subnet" {
+  name          = "${var.env}-private-subnet"
+  ip_cidr_range = var.private_subnet_cidr
+  region        = var.region
+  network       = google_compute_network.vpc.id
 }
